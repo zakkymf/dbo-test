@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Badge, Button, Form, Table, Modal, Pagination } from "react-bootstrap";
-import { formatCurrency } from "../../../shared/utils";
+import { Button, Form, Table, Modal, Pagination } from "react-bootstrap";
 import { useOrderController } from "../controller/useOrderController";
+import OrderTable from "./components/OrderTable";
+import OrderDetail from "./components/OrderDetail";
 
 function Order() {
   const {
@@ -30,18 +31,6 @@ function Order() {
     setCurrentPage(page);
   };
 
-  const getStatusVariant = (status: string | undefined) => {
-    switch (status) {
-      case "Pending":
-        return "warning";
-      case "Completed":
-        return "success";
-      case "Cancelled":
-        return "danger";
-      default:
-        return "secondary";
-    }
-  };
   return (
     <div className="d-flex flex-column">
       <div className="d-flex flex-row align-items-center mx-2 gap-3">
@@ -105,34 +94,14 @@ function Order() {
               </tr>
             ) : (
               currentOrders.map((order) => (
-                <tr key={order.id}>
-                  <td>{order.id}</td>
-                  <td>{order.customer_name}</td>
-                  <td>
-                    {order.items.map((item) => item.product_name).join(", ")}
-                  </td>
-                  <td>{order.customer_email}</td>
-                  <td>{order.customer_phone}</td>
-                  <td>
-                    <Badge bg={getStatusVariant(order.status)}>
-                      {order.status}
-                    </Badge>
-                  </td>
-                  <td>{formatCurrency(order.total)}</td>
-                  <td>{new Date(order.created_at).toLocaleString("id-ID")}</td>
-                  <td>
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={() => {
-                        onSelectOrder(order);
-                        showOrderModal();
-                      }}
-                    >
-                      Lihat Detail
-                    </Button>
-                  </td>
-                </tr>
+                <OrderTable
+                  key={order?.id}
+                  data={order}
+                  onClick={() => {
+                    onSelectOrder(order);
+                    showOrderModal();
+                  }}
+                />
               ))
             )}
           </tbody>
@@ -176,50 +145,7 @@ function Order() {
           <Modal.Title>Detail Order</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="d-flex flex-column gap-2">
-            <div className="d-flex flex-column">
-              <p className="fw-bold">Nama Customer</p>
-              <p>{selectedOrder?.customer_name}</p>
-            </div>
-            <div className="d-flex flex-column">
-              <p className="fw-bold">Nama Barang</p>
-              <p>
-                {selectedOrder?.items
-                  .map((item) => item.product_name)
-                  .join(", ")}
-              </p>
-            </div>
-            <div className="d-flex flex-column">
-              <p className="fw-bold">Email</p>
-              <p>{selectedOrder?.customer_email}</p>
-            </div>
-            <div className="d-flex flex-column">
-              <p className="fw-bold">No. HP</p>
-              <p>{selectedOrder?.customer_phone}</p>
-            </div>
-            <div className="d-flex flex-column">
-              <p className="fw-bold">Alamat Pengiriman</p>
-              <p>{`${selectedOrder?.shipping_address.address}, ${selectedOrder?.shipping_address.city}, ${selectedOrder?.shipping_address.postal_code}`}</p>
-            </div>
-            <div className="d-flex flex-column">
-              <p className="fw-bold">Tanggal Transaksi</p>
-              <p>
-                {new Date(selectedOrder?.created_at || "").toLocaleString(
-                  "id-ID"
-                )}
-              </p>
-            </div>
-            <div className="d-flex flex-column">
-              <p className="fw-bold">Status</p>
-              <Badge bg={getStatusVariant(selectedOrder?.status)}>
-                {selectedOrder?.status}
-              </Badge>
-            </div>
-            <div className="d-flex flex-column">
-              <p className="fw-bold">Total</p>
-              <p>{formatCurrency(selectedOrder?.total || 0)}</p>
-            </div>
-          </div>
+          <OrderDetail selectedData={selectedOrder} />
         </Modal.Body>
       </Modal>
     </div>

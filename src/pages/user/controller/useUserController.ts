@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useCallback } from "react";
 import { ENDPOINT } from "../../../shared/constant/endpoint";
 import { dummyUsers } from "../../../shared/constant/user";
 import type { UserData } from "../../../shared/interface";
@@ -61,17 +63,21 @@ export const useUserController = () => {
     }
   };
 
-  const onSelectUser = (user: UserData) => {
-    setSelectedUser(user);
-  };
+  const onSelectUser = useCallback(
+    (user: UserData) => {
+      setSelectedUser(user);
+    },
+    [selectedUser]
+  );
 
-  const showUserModal = () => {
+  const showUserModal = useCallback(() => {
     setShowModal(true);
-  };
+  }, [showModal]);
 
-  const hideUserModal = () => {
+  const hideUserModal = useCallback(() => {
     setShowModal(false);
-  };
+    setSelectedUser(null);
+  }, [showModal]);
 
   return {
     users,

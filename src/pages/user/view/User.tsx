@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Button, Form, Modal, Pagination, Table } from "react-bootstrap";
 
 import { useUserController } from "../controller/useUserController";
+import UserTable from "./components/UserTable";
+import UserDetail from "./components/UserDetail";
 
 function User() {
   const {
@@ -81,28 +83,14 @@ function User() {
               </tr>
             ) : (
               currentUsers.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.id}</td>
-                  <td>{user.name}</td>
-                  <td>{user.role}</td>
-                  <td>{user.email}</td>
-                  <td>{user.phone}</td>
-                  <td>
-                    {new Date(user.registered_at).toLocaleString("id-ID")}
-                  </td>
-                  <td>
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={() => {
-                        onSelectUser(user);
-                        showUserModal();
-                      }}
-                    >
-                      Lihat Detail
-                    </Button>
-                  </td>
-                </tr>
+                <UserTable
+                  key={user?.id}
+                  user={user}
+                  onClick={() => {
+                    onSelectUser(user);
+                    showUserModal();
+                  }}
+                />
               ))
             )}
           </tbody>
@@ -146,32 +134,7 @@ function User() {
           <Modal.Title>Detail User</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="d-flex flex-column gap-2">
-            <div>
-              <p className="fw-bold">Nama Customer</p>
-              <p>{selectedUser?.name}</p>
-            </div>
-            <div>
-              <p className="fw-bold">Role</p>
-              <p>{selectedUser?.role}</p>
-            </div>
-            <div>
-              <p className="fw-bold">Email</p>
-              <p>{selectedUser?.email}</p>
-            </div>
-            <div>
-              <p className="fw-bold">No. HP</p>
-              <p>{selectedUser?.phone}</p>
-            </div>
-            <div>
-              <p className="fw-bold">Tanggal Registrasi</p>
-              <p>
-                {new Date(selectedUser?.registered_at || "").toLocaleString(
-                  "id-ID"
-                )}
-              </p>
-            </div>
-          </div>
+          <UserDetail selectedUser={selectedUser} />
         </Modal.Body>
       </Modal>
     </div>

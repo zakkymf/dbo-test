@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useCallback } from "react";
 import { dummyOrders } from "../../../shared/constant";
 import { ENDPOINT } from "../../../shared/constant/endpoint";
 import type { OrderData } from "../../../shared/interface";
@@ -34,18 +36,21 @@ export const useOrderController = () => {
     }
   };
 
-  const onSelectOrder = (order: OrderData) => {
-    setSelectedOrder(order);
-  };
+  const onSelectOrder = useCallback(
+    (order: OrderData) => {
+      setSelectedOrder(order);
+    },
+    [selectedOrder]
+  );
 
-  const showOrderModal = () => {
+  const showOrderModal = useCallback(() => {
     setShow(true);
-  };
+  }, [show]);
 
-  const hideOrderModal = () => {
+  const hideOrderModal = useCallback(() => {
     setShow(false);
     setSelectedOrder(null);
-  };
+  }, [show]);
 
   return {
     orders,
