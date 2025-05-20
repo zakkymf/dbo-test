@@ -11,9 +11,15 @@ export interface UserData {
 export interface UserStore {
   showModal: boolean;
   users: UserData[];
+  userId: string;
+  role: string;
+  filteredUsers: UserData[];
   selectedUser: UserData | null;
   actions: {
     setUsers: (users: UserData[]) => void;
+    setUserId: (userId: string) => void;
+    setRole: (role: string) => void;
+    setFilteredUsers: (filteredUsers: UserData[]) => void;
     setSelectedUser: (user: UserData | null) => void;
     setShowModal: (showModal: boolean) => void;
   };

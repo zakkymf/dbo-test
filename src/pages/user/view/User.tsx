@@ -9,20 +9,30 @@ function User() {
   const {
     users,
     selectedUser,
+    showModal,
+    role,
+    userId,
+    filteredUsers,
     getUsers,
     onSelectUser,
     showUserModal,
     hideUserModal,
-    showModal,
+    filterUsers,
+    resetFilter,
+    setUserId,
+    setRole,
   } = useUserController();
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const totalPages = Math.ceil(users.length / itemsPerPage);
+  const isFilteringActive = userId !== "" || role !== "";
+  const data = isFilteringActive ? filteredUsers : users;
+
+  const totalPages = Math.ceil(data.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentUsers = users.slice(indexOfFirstItem, indexOfLastItem);
+  const currentUsers = data.slice(indexOfFirstItem, indexOfLastItem);
 
   useEffect(() => {
     getUsers();
@@ -37,10 +47,20 @@ function User() {
       <div className="d-flex flex-row align-items-center mx-2 gap-3">
         <div className="d-flex flex-column me-3">
           <label className="mb-2" htmlFor="search-phone">
-            Cari No. HP
+            Cari User ID
           </label>
           <Form>
-            <Form.Control type="text" placeholder="Cari No. HP" />
+            <Form.Control
+              type="text"
+              placeholder="Cari User ID"
+              value={userId}
+              onChange={(e) => {
+                if (e.target.value === "") {
+                  resetFilter();
+                }
+                setUserId(e.target.value);
+              }}
+            />
           </Form>
         </div>
 
@@ -48,8 +68,12 @@ function User() {
           <label className="mb-2" htmlFor="role">
             Role
           </label>
-          <Form.Select aria-label="Default select example">
-            <option>Pilih Role</option>
+          <Form.Select
+            aria-label="Pilih Role"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="">Pilih Role</option>
             <option value="Customer">Customer</option>
             <option value="Supplier">Supplier</option>
           </Form.Select>
@@ -57,7 +81,9 @@ function User() {
       </div>
 
       <div className="mt-4 w-100 d-flex">
-        <Button variant="primary">Terapkan Filter</Button>
+        <Button variant="primary" onClick={filterUsers}>
+          Terapkan Filter
+        </Button>
       </div>
 
       <div className="mt-4">

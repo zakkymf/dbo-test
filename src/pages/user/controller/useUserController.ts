@@ -11,7 +11,17 @@ export const useUserController = () => {
     users,
     selectedUser,
     showModal,
-    actions: { setUsers, setSelectedUser, setShowModal },
+    filteredUsers,
+    role,
+    userId,
+    actions: {
+      setUsers,
+      setSelectedUser,
+      setShowModal,
+      setFilteredUsers,
+      setUserId,
+      setRole,
+    },
   } = useUserStore();
 
   const getUsers = async () => {
@@ -22,6 +32,7 @@ export const useUserController = () => {
         }, 500);
       });
       setUsers(response as UserData[]);
+      setFilteredUsers(response as UserData[]);
     } catch (error) {
       console.log(error);
     }
@@ -79,10 +90,35 @@ export const useUserController = () => {
     setSelectedUser(null);
   }, [showModal]);
 
+  const filterUsers = useCallback(() => {
+    const filteredUser = users.filter((user) => {
+      const matchId = userId
+        ? user.id.toLowerCase().includes(userId.toLowerCase())
+        : true;
+
+      const matchRole = role
+        ? user.role.toLowerCase() === role.toLowerCase()
+        : true;
+
+      return matchId && matchRole;
+    });
+
+    setFilteredUsers(filteredUser);
+  }, [userId, role, users]);
+
+  const resetFilter = useCallback(() => {
+    setUserId("");
+    setRole("");
+    setFilteredUsers(users);
+  }, [users, setUserId, setRole, setFilteredUsers]);
+
   return {
     users,
     selectedUser,
     showModal,
+    filteredUsers,
+    role,
+    userId,
     getUsers,
     getUserById,
     createUser,
@@ -91,5 +127,9 @@ export const useUserController = () => {
     showUserModal,
     hideUserModal,
     onSelectUser,
+    filterUsers,
+    resetFilter,
+    setUserId,
+    setRole,
   };
 };
