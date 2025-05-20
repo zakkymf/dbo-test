@@ -3,8 +3,15 @@ import type { UserData } from "../../../shared/interface";
 import { httpClient } from "../../../shared/libraries";
 
 export const userService = {
-  getUsers: async () => {
-    const response = await httpClient.get(ENDPOINT.USER);
+  getUsers: async (params: {
+    page: number;
+    limit: number;
+    userId: string;
+    role: string;
+  }) => {
+    const response = await httpClient.get(
+      `${ENDPOINT.USER}?page=${params.page}&limit=${params.limit}&userId=${params.userId}&role=${params.role}`
+    );
     return response.data;
   },
   getUserById: async (id: string) => {

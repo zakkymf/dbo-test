@@ -3,8 +3,15 @@ import type { OrderData } from "../../../shared/interface";
 import { httpClient } from "../../../shared/libraries";
 
 export const orderService = {
-  getOrders: async () => {
-    const response = await httpClient.get(ENDPOINT.ORDER);
+  getOrders: async (params: {
+    page: number;
+    limit: number;
+    orderId: string;
+    status: string;
+  }) => {
+    const response = await httpClient.get(
+      `${ENDPOINT.ORDER}?page=${params.page}&limit=${params.limit}&orderId=${params.orderId}&status=${params.status}`
+    );
     return response.data;
   },
   getOrderById: async (id: string) => {
