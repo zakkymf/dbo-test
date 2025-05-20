@@ -1,10 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useMemo, useState } from "react";
 import { dummyOrders } from "../../../shared/constant";
-import { ENDPOINT } from "../../../shared/constant/endpoint";
 import type { OrderData } from "../../../shared/interface";
-import { httpClient } from "../../../shared/libraries";
 import { useOrderStore } from "../models/useOrderStore";
+import { orderService } from "../services/orderService";
 
 export const useOrderController = () => {
   const {
@@ -55,8 +54,35 @@ export const useOrderController = () => {
 
   const getOrderById = async (id: string) => {
     try {
-      const response = await httpClient.get(ENDPOINT.ORDER + `/${id}`);
+      const response = await orderService.getOrderById(id);
       setSelectedOrder(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const createOrder = async (order: OrderData) => {
+    try {
+      const response = await orderService.createOrder(order);
+      setOrders(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateOrder = async (id: string, order: OrderData) => {
+    try {
+      const response = await orderService.updateOrder(id, order);
+      setOrders(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteOrder = async (id: string) => {
+    try {
+      const response = await orderService.deleteOrder(id);
+      setOrders(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -97,6 +123,9 @@ export const useOrderController = () => {
     setCurrentPage,
     getOrders,
     getOrderById,
+    createOrder,
+    updateOrder,
+    deleteOrder,
     showOrderModal,
     hideOrderModal,
     onSelectOrder,

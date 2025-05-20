@@ -1,10 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useMemo, useState } from "react";
-import { ENDPOINT } from "../../../shared/constant/endpoint";
 import { dummyUsers } from "../../../shared/constant/user";
 import type { UserData } from "../../../shared/interface";
-import { httpClient } from "../../../shared/libraries";
 import { useUserStore } from "../models/useUserStore";
+import { userService } from "../services/userService";
 
 export const useUserController = () => {
   const {
@@ -49,7 +48,7 @@ export const useUserController = () => {
 
   const getUserById = async (id: string) => {
     try {
-      const response = await httpClient.get(ENDPOINT.USER + `/${id}`);
+      const response = await userService.getUserById(id);
       setUsers(response.data);
     } catch (error) {
       console.log(error);
@@ -58,7 +57,7 @@ export const useUserController = () => {
 
   const createUser = async (user: UserData) => {
     try {
-      const response = await httpClient.post(ENDPOINT.USER, user);
+      const response = await userService.createUser(user);
       setUsers(response.data);
     } catch (error) {
       console.log(error);
@@ -67,7 +66,7 @@ export const useUserController = () => {
 
   const updateUser = async (id: string, user: UserData) => {
     try {
-      const response = await httpClient.put(ENDPOINT.USER + `/${id}`, user);
+      const response = await userService.updateUser(id, user);
       setUsers(response.data);
     } catch (error) {
       console.log(error);
@@ -76,7 +75,7 @@ export const useUserController = () => {
 
   const deleteUser = async (id: string) => {
     try {
-      const response = await httpClient.delete(ENDPOINT.USER + `/${id}`);
+      const response = await userService.deleteUser(id);
       setUsers(response.data);
     } catch (error) {
       console.log(error);
