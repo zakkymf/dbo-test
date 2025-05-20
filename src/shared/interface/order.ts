@@ -25,10 +25,16 @@ export interface OrderData {
 export interface OrderStore {
   show: boolean;
   orders: OrderData[];
+  filteredOrders: OrderData[];
+  orderId: string;
+  status: "Pending" | "Completed" | "Cancelled" | "All";
   selectedOrder: OrderData | null;
   actions: {
     setShow: (show: boolean) => void;
     setOrders: (orders: OrderData[]) => void;
+    setFilteredOrders: (filteredOrders: OrderData[]) => void;
+    setOrderId: (orderId: string) => void;
+    setStatus: (status: "Pending" | "Completed" | "Cancelled" | "All") => void;
     setSelectedOrder: (order: OrderData | null) => void;
   };
 }

@@ -9,19 +9,29 @@ function Order() {
     orders,
     show,
     selectedOrder,
+    orderId,
+    status,
+    filteredOrders,
     onSelectOrder,
     showOrderModal,
     hideOrderModal,
     getOrders,
+    setOrderId,
+    setStatus,
+    filterOrders,
+    resetFilter,
   } = useOrderController();
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const totalPages = Math.ceil(orders.length / itemsPerPage);
+  const isFilteringActive = status !== "All" || orderId !== "";
+  const data = isFilteringActive ? filteredOrders : orders;
+
+  const totalPages = Math.ceil(data.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentOrders = orders.slice(indexOfFirstItem, indexOfLastItem);
+  const currentOrders = data.slice(indexOfFirstItem, indexOfLastItem);
 
   useEffect(() => {
     getOrders();
@@ -39,7 +49,17 @@ function Order() {
             Cari Order ID
           </label>
           <Form>
-            <Form.Control type="text" placeholder="Cari Order ID" />
+            <Form.Control
+              value={orderId}
+              onChange={(e) => {
+                setOrderId(e.target.value);
+                if (e.target.value === "") {
+                  resetFilter();
+                }
+              }}
+              type="text"
+              placeholder="Cari Order ID"
+            />
           </Form>
         </div>
 
@@ -47,11 +67,19 @@ function Order() {
           <label className="mb-2" htmlFor="status">
             Status
           </label>
-          <Form.Select aria-label="Default select example">
-            <option>Pilih Status</option>
+          <Form.Select
+            value={status}
+            onChange={(e) =>
+              setStatus(
+                e.target.value as "Pending" | "Completed" | "Cancelled" | "All"
+              )
+            }
+            aria-label="Default select example"
+          >
+            <option value="All">All</option>
             <option value="Pending">Pending</option>
-            <option value="Paid">Paid</option>
-            <option value="Canceled">Canceled</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
           </Form.Select>
         </div>
 
@@ -66,7 +94,9 @@ function Order() {
       </div>
 
       <div className="mt-4 w-100 d-flex">
-        <Button variant="primary">Terapkan Filter</Button>
+        <Button variant="primary" onClick={filterOrders}>
+          Terapkan Filter
+        </Button>
       </div>
 
       <div className="mt-4">

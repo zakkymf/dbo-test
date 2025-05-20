@@ -10,8 +10,18 @@ export const useOrderController = () => {
   const {
     orders,
     show,
+    orderId,
+    status,
     selectedOrder,
-    actions: { setOrders, setShow, setSelectedOrder },
+    filteredOrders,
+    actions: {
+      setOrders,
+      setShow,
+      setSelectedOrder,
+      setOrderId,
+      setStatus,
+      setFilteredOrders,
+    },
   } = useOrderStore();
 
   const getOrders = async () => {
@@ -22,6 +32,7 @@ export const useOrderController = () => {
         }, 500);
       });
       setOrders(response as OrderData[]);
+      setFilteredOrders(response as OrderData[]);
     } catch (error) {
       console.log(error);
     }
@@ -52,14 +63,44 @@ export const useOrderController = () => {
     setSelectedOrder(null);
   }, [show]);
 
+  const filterOrders = useCallback(() => {
+    const filteredOrder = orders.filter((order) => {
+      const matchId = orderId
+        ? order.id.toLowerCase().includes(orderId.toLowerCase())
+        : true;
+
+      const matchStatus =
+        status && status !== "All"
+          ? order.status.toLowerCase() === status.toLowerCase()
+          : true;
+
+      return matchId && matchStatus;
+    });
+
+    setFilteredOrders(filteredOrder);
+  }, [orderId, status, orders]);
+
+  const resetFilter = useCallback(() => {
+    setOrderId("");
+    setStatus("All");
+    setFilteredOrders(orders);
+  }, [orders, setOrderId, setStatus, setFilteredOrders]);
+
   return {
     orders,
     show,
     selectedOrder,
+    orderId,
+    status,
+    filteredOrders,
     getOrders,
     getOrderById,
     showOrderModal,
     hideOrderModal,
     onSelectOrder,
+    setOrderId,
+    setStatus,
+    filterOrders,
+    resetFilter,
   };
 };
