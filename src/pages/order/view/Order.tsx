@@ -82,15 +82,6 @@ function Order() {
             <option value="Cancelled">Cancelled</option>
           </Form.Select>
         </div>
-
-        <div className="d-flex flex-column">
-          <label className="mb-2" htmlFor="tanggal-transaksi">
-            Tanggal Transaksi
-          </label>
-          <Form>
-            <Form.Control type="text" placeholder="Tanggal Transaksi" />
-          </Form>
-        </div>
       </div>
 
       <div className="mt-4 w-100 d-flex">

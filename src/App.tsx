@@ -20,6 +20,8 @@ function App() {
     if (!isLoggedIn && !isLoginPage) {
       navigate("/login", { replace: true });
     }
+
+    document.title = "Admin Dashboard";
   }, [isLoggedIn]);
 
   return (
