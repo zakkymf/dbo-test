@@ -1,46 +1,37 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Button, Form, Modal, Pagination, Table } from "react-bootstrap";
 
-import { useUserController } from "../controller/useUserController";
+import { useUserController } from "../controllers/useUserController";
 import UserTable from "./components/UserTable";
 import UserDetail from "./components/UserDetail";
+import { useUserStore } from "../models/useUserStore";
 
 function User() {
+  const selectedUser = useUserStore((state) => state.selectedUser);
+  const showModal = useUserStore((state) => state.showModal);
+  const role = useUserStore((state) => state.role);
+  const userId = useUserStore((state) => state.userId);
+
+  const setUserId = useUserStore((state) => state.setUserId);
+  const setRole = useUserStore((state) => state.setRole);
+  const filterUsers = useUserStore((state) => state.filterUsers);
+  const resetFilter = useUserStore((state) => state.resetFilter);
+
   const {
-    users,
-    selectedUser,
-    showModal,
-    role,
-    userId,
-    filteredUsers,
+    currentPage,
+    currentUsers,
+    totalPages,
+    setCurrentPage,
     getUsers,
     onSelectUser,
     showUserModal,
     hideUserModal,
-    filterUsers,
-    resetFilter,
-    setUserId,
-    setRole,
+    handlePageChange,
   } = useUserController();
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
-  const isFilteringActive = userId !== "" || role !== "";
-  const data = isFilteringActive ? filteredUsers : users;
-
-  const totalPages = Math.ceil(data.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentUsers = data.slice(indexOfFirstItem, indexOfLastItem);
 
   useEffect(() => {
     getUsers();
   }, []);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
 
   return (
     <div className="d-flex flex-column">

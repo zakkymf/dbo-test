@@ -1,6 +1,6 @@
 import { Nav } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router";
-import { useLoginController } from "../../pages/login/controller/useLoginController";
+import { useLoginController } from "../../pages/login/controllers/useLoginController";
 
 interface SidebarProps {
   isOpen: boolean;

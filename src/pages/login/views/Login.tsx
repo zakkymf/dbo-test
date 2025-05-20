@@ -1,5 +1,5 @@
 import { Button, Card, Form } from "react-bootstrap";
-import { useLoginController } from "../controller/useLoginController";
+import { useLoginController } from "../controllers/useLoginController";
 
 function Login() {
   const { email, password, handleLogin, setEmail, setPassword } =

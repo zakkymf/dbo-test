@@ -1,28 +1,37 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { ENDPOINT } from "../../../shared/constant/endpoint";
 import { dummyUsers } from "../../../shared/constant/user";
 import type { UserData } from "../../../shared/interface";
 import { httpClient } from "../../../shared/libraries";
-import { useUserStore } from "../model/useUserStore";
+import { useUserStore } from "../models/useUserStore";
 
 export const useUserController = () => {
   const {
-    users,
-    selectedUser,
-    showModal,
-    filteredUsers,
-    role,
     userId,
-    actions: {
-      setUsers,
-      setSelectedUser,
-      setShowModal,
-      setFilteredUsers,
-      setUserId,
-      setRole,
-    },
+    role,
+    filteredUsers,
+    users,
+
+    setUsers,
+    setSelectedUser,
+    setShowModal,
+    setFilteredUsers,
   } = useUserStore();
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const isFilteringActive = userId !== "" || role !== "";
+  const data = isFilteringActive ? filteredUsers : users;
+
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+
+  const currentUsers = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return data.slice(start, end);
+  }, [data, currentPage]);
 
   const getUsers = async () => {
     try {
@@ -74,51 +83,33 @@ export const useUserController = () => {
     }
   };
 
-  const onSelectUser = useCallback(
-    (user: UserData) => {
-      setSelectedUser(user);
-    },
-    [selectedUser]
-  );
+  const onSelectUser = useCallback((user: UserData) => {
+    setSelectedUser(user);
+  }, []);
 
   const showUserModal = useCallback(() => {
     setShowModal(true);
-  }, [showModal]);
+  }, []);
 
   const hideUserModal = useCallback(() => {
     setShowModal(false);
     setSelectedUser(null);
-  }, [showModal]);
+  }, []);
 
-  const filterUsers = useCallback(() => {
-    const filteredUser = users.filter((user) => {
-      const matchId = userId
-        ? user.id.toLowerCase().includes(userId.toLowerCase())
-        : true;
-
-      const matchRole = role
-        ? user.role.toLowerCase() === role.toLowerCase()
-        : true;
-
-      return matchId && matchRole;
-    });
-
-    setFilteredUsers(filteredUser);
-  }, [userId, role, users]);
-
-  const resetFilter = useCallback(() => {
-    setUserId("");
-    setRole("");
-    setFilteredUsers(users);
-  }, [users, setUserId, setRole, setFilteredUsers]);
+  const handlePageChange = useCallback(
+    (page: number) => {
+      if (page < 1) page = 1;
+      else if (page > totalPages) page = totalPages;
+      setCurrentPage(page);
+    },
+    [totalPages]
+  );
 
   return {
-    users,
-    selectedUser,
-    showModal,
-    filteredUsers,
-    role,
-    userId,
+    currentUsers,
+    currentPage,
+    totalPages,
+    setCurrentPage,
     getUsers,
     getUserById,
     createUser,
@@ -127,9 +118,6 @@ export const useUserController = () => {
     showUserModal,
     hideUserModal,
     onSelectUser,
-    filterUsers,
-    resetFilter,
-    setUserId,
-    setRole,
+    handlePageChange,
   };
 };

@@ -1,16 +1,19 @@
 import { Col, Row } from "react-bootstrap";
-import { useLoginStore } from "../../login/model/useLoginStore";
+import { useLoginStore } from "../../login/models/useLoginStore";
 import OrderStatusCard from "./components/OrderStatusCard";
-import { useOrderController } from "../../order/controller/useOrderController";
+import { useOrderController } from "../../order/controllers/useOrderController";
 import { useEffect } from "react";
-import { useUserController } from "../../user/controller/useUserController";
+import { useUserController } from "../../user/controllers/useUserController";
 import UserCard from "./components/UserCard";
+import { useUserStore } from "../../user/models/useUserStore";
 
 function Home() {
   const { loginData } = useLoginStore();
 
   const { orders, getOrders } = useOrderController();
-  const { users, getUsers } = useUserController();
+
+  const { users } = useUserStore();
+  const { getUsers } = useUserController();
 
   useEffect(() => {
     getOrders();

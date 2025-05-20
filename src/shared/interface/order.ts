@@ -29,12 +29,12 @@ export interface OrderStore {
   orderId: string;
   status: "Pending" | "Completed" | "Cancelled" | "All";
   selectedOrder: OrderData | null;
-  actions: {
-    setShow: (show: boolean) => void;
-    setOrders: (orders: OrderData[]) => void;
-    setFilteredOrders: (filteredOrders: OrderData[]) => void;
-    setOrderId: (orderId: string) => void;
-    setStatus: (status: "Pending" | "Completed" | "Cancelled" | "All") => void;
-    setSelectedOrder: (order: OrderData | null) => void;
-  };
+  setShow: (show: boolean) => void;
+  setOrders: (orders: OrderData[]) => void;
+  setFilteredOrders: (filteredOrders: OrderData[]) => void;
+  setOrderId: (orderId: string) => void;
+  setStatus: (status: "Pending" | "Completed" | "Cancelled" | "All") => void;
+  setSelectedOrder: (order: OrderData | null) => void;
+  filterOrders: () => void;
+  resetFilter: () => void;
 }

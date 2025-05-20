@@ -4,7 +4,7 @@ import { dummyOrders } from "../../../shared/constant";
 import { ENDPOINT } from "../../../shared/constant/endpoint";
 import type { OrderData } from "../../../shared/interface";
 import { httpClient } from "../../../shared/libraries";
-import { useOrderStore } from "../model/useOrderStore";
+import { useOrderStore } from "../models/useOrderStore";
 
 export const useOrderController = () => {
   const {
@@ -14,14 +14,15 @@ export const useOrderController = () => {
     status,
     selectedOrder,
     filteredOrders,
-    actions: {
-      setOrders,
-      setShow,
-      setSelectedOrder,
-      setOrderId,
-      setStatus,
-      setFilteredOrders,
-    },
+
+    setOrders,
+    setShow,
+    setSelectedOrder,
+    setOrderId,
+    setStatus,
+    setFilteredOrders,
+    filterOrders,
+    resetFilter,
   } = useOrderStore();
 
   const getOrders = async () => {
@@ -62,29 +63,6 @@ export const useOrderController = () => {
     setShow(false);
     setSelectedOrder(null);
   }, [show]);
-
-  const filterOrders = useCallback(() => {
-    const filteredOrder = orders.filter((order) => {
-      const matchId = orderId
-        ? order.id.toLowerCase().includes(orderId.toLowerCase())
-        : true;
-
-      const matchStatus =
-        status && status !== "All"
-          ? order.status.toLowerCase() === status.toLowerCase()
-          : true;
-
-      return matchId && matchStatus;
-    });
-
-    setFilteredOrders(filteredOrder);
-  }, [orderId, status, orders]);
-
-  const resetFilter = useCallback(() => {
-    setOrderId("");
-    setStatus("All");
-    setFilteredOrders(orders);
-  }, [orders, setOrderId, setStatus, setFilteredOrders]);
 
   return {
     orders,

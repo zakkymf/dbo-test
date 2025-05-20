@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Form, Table, Modal, Pagination } from "react-bootstrap";
-import { useOrderController } from "../controller/useOrderController";
+import { useOrderController } from "../controllers/useOrderController";
 import OrderTable from "./components/OrderTable";
 import OrderDetail from "./components/OrderDetail";
 

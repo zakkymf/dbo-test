@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useNavigate } from "react-router";
-import { useLoginStore } from "../model/useLoginStore";
+import { useLoginStore } from "../models/useLoginStore";
 
 export const useLoginController = () => {
   const {

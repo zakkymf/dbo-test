@@ -1,12 +1,13 @@
 import { Routes, Route, useLocation, useNavigate } from "react-router";
-import Home from "./pages/home/view/Home";
-import Login from "./pages/login/view/Login";
+
+import Login from "./pages/login/views/Login";
 import { useEffect, useState } from "react";
 import "./App.css";
 import SideBar from "./shared/components/SideBar";
-import Order from "./pages/order/view/Order";
-import User from "./pages/user/view/User";
-import { useLoginStore } from "./pages/login/model/useLoginStore";
+import Order from "./pages/order/views/Order";
+import User from "./pages/user/views/User";
+import { useLoginStore } from "./pages/login/models/useLoginStore";
+import Home from "./pages/home/views/Home";
 
 function App() {
   const [isOpen] = useState(true);
