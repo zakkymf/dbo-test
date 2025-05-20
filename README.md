@@ -1,54 +1,116 @@
-# React + TypeScript + Vite
+# DBO Test
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+DBO Test is repository for the solutions of assignment to Depoguna Bangunan Online hiring process.
 
-Currently, two official plugins are available:
+## Prerequisite
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Node.js
+- React
+- Vite
 
-## Expanding the ESLint configuration
+## Setup Instructions
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Clone this repository
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+git clone git@github.com:zakkymf/dbo-test.git
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Install Dependencies
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+cd dbo-test
+npm install #or
+yarn install
 ```
+
+3. Running on local machine
+
+```bash
+yarn dev
+```
+
+Once the server is running, open your browser and navigate to `http://localhost:5173/`. The application will automatically reload whenever you modify any of the source files.
+
+## Architecture
+
+```
+── App.css
+├── App.tsx
+├── assets
+|  └── react.svg
+├── main.tsx
+├── pages
+|  ├── home
+|  |  ├── controllers
+|  |  ├── models
+|  |  └── views
+|  ├── login
+|  |  ├── controllers
+|  |  ├── models
+|  |  └── views
+|  ├── order
+|  |  ├── controllers
+|  |  ├── models
+|  |  ├── services
+|  |  └── views
+|  └── user
+|     ├── controllers
+|     ├── models
+|     ├── services
+|     └── views
+├── shared
+|  ├── components
+|  ├── constant
+|  ├── interface
+|  ├── libraries
+|  └── utils
+└── vite-env.d.ts
+```
+
+This project is using MVC (Model-View-Controller) architecture, here is the detail about structure of this project:
+
+### Root Files
+
+- `App.tsx` – Main app component; typically contains global layout, routing, and providers.
+
+- `App.css` – Global styles.
+
+- `main.tsx` – Entry point for rendering the React app into the DOM.
+
+- `vite-env.d.ts` – Environment-specific TypeScript declarations for Vite.
+
+### Pages Files
+
+Each folder in pages/ represents a feature/module and follows the MVC structure:
+
+- `controllers/` – Contains logic that connects views with models/services.
+
+- `models/` – Defines state stores or data schemas.
+
+- `services/` – API service layer using Axios or similar.
+
+- `views/` – Components rendering UI for this feature.
+
+### Shared
+
+Contains reusable code and global configurations:
+
+- `components/` – Shared UI components (e.g., Button, Modal, Input).
+
+- `constant/` – Constant values (e.g., API endpoints, roles).
+
+- `interface/` – Global TypeScript interfaces and types.
+
+- `libraries/` – Custom libraries or wrapper instances (e.g., Axios, Firebase).
+
+- `utils/` – General utility functions (e.g., formatters, validators).
+
+## Demo
+
+![Login View](/demo/login.png?raw=true "Login View")
+![Home View](/demo/home.png?raw=true "Home View")
+![Order View](/demo/order.png?raw=true "Order View")
+![OrderDetail View](/demo/detail-order.png?raw=true "OrderDetail View")
+![User View](/demo/user.png?raw=true "User View")
+![UserDetail View](/demo/detail-user.png?raw=true "UserDetail View")
