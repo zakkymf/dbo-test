@@ -4,9 +4,9 @@ DBO Test is repository for the solutions of assignment to Depoguna Bangunan Onli
 
 ## Prerequisite
 
-- Node.js
-- React
-- Vite
+- [Node.js](https://nodejs.org/en)
+- [React](https://react.dev)
+- [Vite](https://vite.dev)
 
 ## Setup Instructions
 
