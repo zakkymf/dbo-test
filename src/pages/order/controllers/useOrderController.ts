@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { dummyOrders } from "../../../shared/constant";
 import { ENDPOINT } from "../../../shared/constant/endpoint";
 import type { OrderData } from "../../../shared/interface";
@@ -25,6 +25,20 @@ export const useOrderController = () => {
     resetFilter,
   } = useOrderStore();
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const isFilteringActive = orderId !== "" || status !== "All";
+  const data = isFilteringActive ? filteredOrders : orders;
+
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+
+  const currentOrders = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return data.slice(start, end);
+  }, [data, currentPage]);
+
   const getOrders = async () => {
     try {
       const response = await new Promise((resolve) => {
@@ -48,21 +62,27 @@ export const useOrderController = () => {
     }
   };
 
-  const onSelectOrder = useCallback(
-    (order: OrderData) => {
-      setSelectedOrder(order);
-    },
-    [selectedOrder]
-  );
+  const onSelectOrder = useCallback((order: OrderData) => {
+    setSelectedOrder(order);
+  }, []);
 
   const showOrderModal = useCallback(() => {
     setShow(true);
-  }, [show]);
+  }, []);
 
   const hideOrderModal = useCallback(() => {
     setShow(false);
     setSelectedOrder(null);
-  }, [show]);
+  }, []);
+
+  const handlePageChange = useCallback(
+    (page: number) => {
+      if (page < 1) page = 1;
+      else if (page > totalPages) page = totalPages;
+      setCurrentPage(page);
+    },
+    [totalPages]
+  );
 
   return {
     orders,
@@ -71,6 +91,10 @@ export const useOrderController = () => {
     orderId,
     status,
     filteredOrders,
+    currentPage,
+    totalPages,
+    currentOrders,
+    setCurrentPage,
     getOrders,
     getOrderById,
     showOrderModal,
@@ -80,5 +104,6 @@ export const useOrderController = () => {
     setStatus,
     filterOrders,
     resetFilter,
+    handlePageChange,
   };
 };

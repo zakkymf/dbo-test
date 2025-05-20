@@ -6,13 +6,15 @@ import { useEffect } from "react";
 import { useUserController } from "../../user/controllers/useUserController";
 import UserCard from "./components/UserCard";
 import { useUserStore } from "../../user/models/useUserStore";
+import { useOrderStore } from "../../order/models/useOrderStore";
 
 function Home() {
   const { loginData } = useLoginStore();
 
-  const { orders, getOrders } = useOrderController();
+  const orders = useOrderStore((state) => state.orders);
+  const { getOrders } = useOrderController();
 
-  const { users } = useUserStore();
+  const users = useUserStore((state) => state.users);
   const { getUsers } = useUserController();
 
   useEffect(() => {

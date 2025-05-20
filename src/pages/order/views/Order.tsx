@@ -1,45 +1,36 @@
-import { useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect } from "react";
 import { Button, Form, Table, Modal, Pagination } from "react-bootstrap";
 import { useOrderController } from "../controllers/useOrderController";
 import OrderTable from "./components/OrderTable";
 import OrderDetail from "./components/OrderDetail";
+import { useOrderStore } from "../models/useOrderStore";
 
 function Order() {
+  const orderId = useOrderStore((state) => state.orderId);
+  const status = useOrderStore((state) => state.status);
+  const show = useOrderStore((state) => state.show);
+  const selectedOrder = useOrderStore((state) => state.selectedOrder);
+  const setOrderId = useOrderStore((state) => state.setOrderId);
+  const setStatus = useOrderStore((state) => state.setStatus);
+  const filterOrders = useOrderStore((state) => state.filterOrders);
+  const resetFilter = useOrderStore((state) => state.resetFilter);
+
   const {
-    orders,
-    show,
-    selectedOrder,
-    orderId,
-    status,
-    filteredOrders,
+    currentOrders,
+    currentPage,
+    totalPages,
+    setCurrentPage,
     onSelectOrder,
     showOrderModal,
     hideOrderModal,
     getOrders,
-    setOrderId,
-    setStatus,
-    filterOrders,
-    resetFilter,
+    handlePageChange,
   } = useOrderController();
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
-  const isFilteringActive = status !== "All" || orderId !== "";
-  const data = isFilteringActive ? filteredOrders : orders;
-
-  const totalPages = Math.ceil(data.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentOrders = data.slice(indexOfFirstItem, indexOfLastItem);
 
   useEffect(() => {
     getOrders();
   }, []);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
 
   return (
     <div className="d-flex flex-column">
